@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F-1 Student Transfer Guide | Agent Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #050411;
+            --accent-color: #e6e6e6;
+            --danger-color: #ff4a4a;
+            --success-color: #10b981;
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Syne', sans-serif;
+            --transition-smooth: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #050411;
+            --text-color: #ffffff;
+            --accent-color: #222222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            cursor: none; 
+            transition: background-color 0.8s var(--transition-smooth), color 0.8s var(--transition-smooth);
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s var(--transition-smooth), height 0.3s var(--transition-smooth), background-color 0.3s var(--transition-smooth);
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovering {
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            cursor: none;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: #fff;
+            transition: padding 0.5s ease;
+        }
+
+        header.scrolled {
+            padding: 1.5rem 4rem;
+            background: rgba(5, 4, 17, 0.1);
+            backdrop-filter: blur(10px);
+            mix-blend-mode: normal;
+            color: var(--text-color);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: currentColor;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        .section-pad {
+            padding: 8rem 0;
+        }
+
+        /* Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s var(--transition-smooth), transform 1s var(--transition-smooth);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 7vw, 8rem);
+            line-height: 1;
+            letter-spacing: -2px;
+            max-width: 1200px;
+        }
+
+        .hero-text-line {
+            overflow: hidden;
+            display: block;
+        }
+
+        .hero-text-line span {
+            display: block;
+            transform: translateY(100%);
+            animation: slideUp 1.2s var(--transition-smooth) forwards;
+        }
+
+        .hero-text-line:nth-child(2) span {
+            animation-delay: 0.15s;
+        }
+
+        .hero-text-line:nth-child(3) span {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); }
+        }
+
+        .hero-graphic {
+            position: absolute;
+            right: -5%;
+            top: 20%;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(45deg, #d3d3d3, #f5f5f5);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: morphShape 15s ease-in-out infinite alternate;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        @keyframes morphShape {
+            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+            67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+            100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+        
+        .section-intro {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin-bottom: 4rem;
+            line-height: 1.4;
+            color: #666;
+        }
+        
+        [data-theme="dark"] .section-intro {
+            color: #aaa;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-top: 2px solid var(--text-color);
+            margin-top: 2rem;
+        }
+
+        .comp-header {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.2rem;
+            padding: 1.5rem 1rem;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        .comp-cell {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--accent-color);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .comp-cell strong {
+            font-weight: 700;
+        }
+
+        .risk-low { color: var(--success-color); font-weight: 700; }
+        .risk-high { color: var(--danger-color); font-weight: 700; }
+
+        /* Accordion */
+        .accordion {
+            border-top: 1px solid var(--accent-color);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid var(--accent-color);
+            position: relative;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 2.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: none;
+            transition: color 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            color: #888;
+        }
+
+        .accordion-icon {
+            font-size: 2rem;
+            font-weight: 300;
+            transition: transform 0.5s var(--transition-smooth);
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(45deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s var(--transition-smooth);
+        }
+
+        .accordion-inner {
+            padding-bottom: 3rem;
+        }
+
+        .guide-list {
+            list-style: none;
+            counter-reset: custom-counter;
+        }
+
+        .guide-list li {
+            position: relative;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            color: #444;
+        }
+        
+        [data-theme="dark"] .guide-list li {
+            color: #bbb;
+        }
+
+        .guide-list.bullet li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .guide-list.numbered li {
+            counter-increment: custom-counter;
+        }
+
+        .guide-list.numbered li::before {
+            content: counter(custom-counter) ".";
+            position: absolute;
+            left: 0;
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .guide-list li strong {
+            color: var(--text-color);
+        }
+
+        /* Marquee */
+        .marquee-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 4rem 0;
+            border-top: 1px solid var(--accent-color);
+            border-bottom: 1px solid var(--accent-color);
+            background-color: var(--bg-color);
+            position: relative;
+        }
+        
+        .marquee-wrapper::before, .marquee-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 150px;
+            height: 100%;
+            z-index: 2;
+        }
+        
+        .marquee-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg-color) 0%, transparent 100%);
+        }
+        
+        .marquee-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg-color) 0%, transparent 100%);
+        }
+
+        .marquee {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        .marquee span {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0 2rem;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-color);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Footer */
+        footer {
+            background-color: #050411;
+            color: #fff;
+            padding: 6rem 0 2rem 0;
+            text-align: center;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            text-align: left;
+            border-top: 1px solid #333;
+            padding-top: 4rem;
+        }
+
+        .footer-col h4 {
+            font-family: var(--font-main);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #888;
+        }
+
+        .footer-bottom {
+            margin-top: 6rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            header { padding: 1.5rem 2rem; }
+            .container { padding: 0 2rem; }
+            .comparison-grid { 
+                grid-template-columns: 1fr 1fr; 
+                overflow-x: auto;
+            }
+            .comp-header:first-child, .comp-cell:nth-child(3n+1) { display: none; } /* Hide feature column on small screens for brevity */
+        }
+        
+        @media (max-width: 768px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            nav ul { display: none; }
+            .hero h1 { font-size: 3rem; }
+            .comparison-grid { display: block; }
+            .comp-header { display: none; }
+            .comp-cell { border-bottom: none; padding: 0.5rem 0; }
+            .comp-cell:nth-child(3n+2)::before { content: "Option 1: "; font-weight: bold; }
+            .comp-cell:nth-child(3n+3)::before { content: "Option 2: "; font-weight: bold; }
+            .comp-cell:nth-child(3n+3) { border-bottom: 1px solid var(--accent-color); padding-bottom: 1.5rem; margin-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor" id="custom-cursor"></div>
+
+    <header id="main-header">
+        <a href="#" class="logo">AgentPortal&copy;</a>
+        <nav>
+            <ul>
+                <li><a href="#comparison" class="hover-target">Comparison</a></li>
+                <li><a href="#option1" class="hover-target">Standard Transfer</a></li>
+                <li><a href="#option2" class="hover-target">Reinstatement</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero container">
+            <div class="hero-graphic"></div>
+            <div>
+                <h1 class="hero-title">
+                    <span class="hero-text-line"><span>F-1 Student</span></span>
+                    <span class="hero-text-line"><span>Transfer & Change</span></span>
+                    <span class="hero-text-line"><span>Agent Guide.</span></span>
+                </h1>
+            </div>
+        </section>
+
+        <section id="comparison" class="section-pad container" data-theme-trigger="light">
+            <h2 class="section-header reveal">Quick Comparison</h2>
+            <p class="section-intro reveal">When an F-1 student wants to change schools, they have two options depending on their status. Use this quick reference to advise them correctly.</p>
+            
+            <div class="comparison-grid reveal">
+                <div class="comp-header">Feature</div>
+                <div class="comp-header">Option 1: Standard Transfer</div>
+                <div class="comp-header">Option 2: Terminate & Reinstate</div>
+
+                <div class="comp-cell"><strong>F-1 Status</strong></div>
+                <div class="comp-cell">Maintained (In-Status)</div>
+                <div class="comp-cell">Lost (Out-of-Status)</div>
+
+                <div class="comp-cell"><strong>When it happens</strong></div>
+                <div class="comp-cell"><strong>After</strong> the current semester ends</div>
+                <div class="comp-cell"><strong>Mid-semester</strong> (if student drops out)</div>
+
+                <div class="comp-cell"><strong>Main Requirement</strong></div>
+                <div class="comp-cell">Finish semester in good standing</div>
+                <div class="comp-cell">Find new school within 5 months</div>
+
+                <div class="comp-cell"><strong>New School Docs</strong></div>
+                <div class="comp-cell">Acceptance Letter, Transfer-In Form</div>
+                <div class="comp-cell">Acceptance Letter, Reinstatement I-20</div>
+
+                <div class="comp-cell"><strong>Who Approves?</strong></div>
+                <div class="comp-cell">Our DSO (Releases SEVIS record)</div>
+                <div class="comp-cell">USCIS (Adjudicates Form I-539)</div>
+
+                <div class="comp-cell"><strong>Risk Level</strong></div>
+                <div class="comp-cell risk-low">Low</div>
+                <div class="comp-cell risk-high">High (Approval is not guaranteed)</div>
+            </div>
+        </section>
+
+        <section class="marquee-wrapper">
+            <div class="marquee">
+                <span>SEVIS TRANSFER</span> <span>I-539 REINSTATEMENT</span> <span>DSO APPROVAL</span> <span>5-MONTH RULE</span>
+                <span>SEVIS TRANSFER</span> <span>I-539 REINSTATEMENT</span> <span>DSO APPROVAL</span> <span>5-MONTH RULE</span>
+            </div>
+        </section>
+
+        <section id="option1" class="section-pad container" data-theme-trigger="light">
+            <h2 class="section-header reveal">Option 1: Standard SEVIS Transfer</h2>
+            <p class="section-intro reveal">This is the standard, low-risk route (In-Status) for students who successfully finish their current term.</p>
+            
+            <div class="accordion reveal">
+                <div class="accordion-item">
+                    <button class="accordion-header hover-target">
+                        Requirements for the Student <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <ul class="guide-list bullet">
+                                <li><strong>Attendance:</strong> Must maintain at least <strong>80%</strong> attendance.</li>
+                                <li><strong>Academics:</strong> Must complete the semester, taking <strong>all tests and final exams</strong>.</li>
+                                <li><strong>Financials:</strong> Must pay the current semester's <strong>tuition in full</strong> (zero balance).</li>
+                                <li><strong>Timing:</strong> Must start classes at the new school within <strong>5 months</strong> of the semester's end date.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header hover-target">
+                        Agent Action Steps <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <ul class="guide-list numbered">
+                                <li><strong>Explain the Rules:</strong> Inform the student they must finish the semester, take all tests, and pay full tuition.</li>
+                                <li><strong>Collect Documents:</strong> Have the student bring an Acceptance Letter and Transfer-In Form from the new school.</li>
+                                <li><strong>Verify Compliance:</strong> At the end of the semester, confirm the student met the attendance, academic, and financial requirements.</li>
+                                <li><strong>Release SEVIS:</strong> Once verified, work with the DSO to schedule the SEVIS release date.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="option2" class="section-pad container" data-theme-trigger="dark">
+            <h2 class="section-header reveal">Option 2: Terminate & Reinstate</h2>
+            <p class="section-intro reveal">This route is for students who drop out mid-semester or fail to meet the Option 1 requirements. They will fall out of status.</p>
+            
+            <div class="accordion reveal">
+                <div class="accordion-item">
+                    <button class="accordion-header hover-target">
+                        Requirements for the Student <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <ul class="guide-list bullet">
+                                <li><strong>5-Month Rule:</strong> Must secure admission to a new school within <strong>5 months</strong> of their SEVIS termination date.</li>
+                                <li><strong>USCIS Filing:</strong> The student must independently file <strong>Form I-539</strong> with USCIS to ask for their F-1 status back.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header hover-target">
+                        Agent Action Steps <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <ul class="guide-list numbered">
+                                <li><strong>Warn the Student:</strong> Clearly explain that dropping out means losing their F-1 status and work benefits. Reinstatement by USCIS is <strong>never guaranteed</strong>, and a denial means they must leave the U.S. immediately.</li>
+                                <li><strong>Terminate Record:</strong> The DSO terminates the student's SEVIS record for failing to complete the term.</li>
+                                <li><strong>Collect Documents:</strong> Instruct the student to get an Acceptance Letter and a <strong>Reinstatement I-20</strong> from their new school.</li>
+                                <li><strong>Direct to USCIS:</strong> Tell the student they must file Form I-539 (along with their new I-20, acceptance letter, fees, and a letter of explanation) directly with USCIS.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid reveal">
+                <div class="footer-col">
+                    <h4>AgentPortal</h4>
+                    <p>Internal Operations &<br>Advising Guidelines</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#" class="hover-target">DSO Directory</a></li>
+                        <li><a href="#" class="hover-target">USCIS Forms</a></li>
+                        <li><a href="#" class="hover-target">SEVIS Help Hub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#comparison" class="hover-target">Comparison</a></li>
+                        <li><a href="#option1" class="hover-target">Option 1</a></li>
+                        <li><a href="#option2" class="hover-target">Option 2</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom reveal">
+                <p>&copy; 2024 AgentPortal Guidelines</p>
+                <p>
+                    <span style="color: #444;">Confidential - For Internal Use Only</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('custom-cursor');
+        const hoverTargets = document.querySelectorAll('.hover-target, a, button');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => {
+                cursor.classList.add('hovering');
+            });
+            target.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hovering');
+            });
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => revealOnScroll.observe(el));
+
+        // Dynamic Theme Switching
+        const themeTriggers = document.querySelectorAll('[data-theme-trigger]');
+        const body = document.body;
+        
+        const themeOptions = {
+            threshold: 0.4
+        };
+
+        const themeObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const theme = entry.target.getAttribute('data-theme-trigger');
+                    if (theme === 'dark') {
+                        body.setAttribute('data-theme', 'dark');
+                    } else {
+                        body.removeAttribute('data-theme');
+                    }
+                }
+            });
+        }, themeOptions);
+
+        themeTriggers.forEach(trigger => themeObserver.observe(trigger));
+
+        // Accordion Logic
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const content = item.querySelector('.accordion-content');
+                
+                // Toggle current item
+                item.classList.toggle('active');
+                
+                if (item.classList.contains('active')) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } else {
+                    content.style.maxHeight = null;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
